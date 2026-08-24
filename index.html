@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Tech - Dilemas Digitais</title>
+    <style>
+        header {
+            background-color: #d11fe9;
+            color: #FFFFFF;
+            text-align: center;
+            max-width: 800px;
+            margin-bottom: 30px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        body {
+            background-color: yellow;
+        }
+
+        main {
+            background-color: #d4adcf;
+            color: #183C63;
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        img {
+            width: 80px;
+            height: 80px;
+        }
+
+        div p {
+            font-weight: bold;
+        }
+
+        .artigo-autor {
+            font-weight: bold;
+        }
+
+        .imagem {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        article {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgb(236, 214, 10);
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+        }
+
+        footer {
+            background-color: #183C63;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Estilo básico para ajustar espaçamento dos botões nos artigos */
+        button {
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Meu Blog Tech: Dilemas Digitais</h1>
+        <p>Refletindo sobre ética, tecnologia e soluções para o mundo digital</p>
+        <button>❤️<span>0</span></button>
+        <button>👍<span>0</span></button>
+    </header>
+
+    <main>
+        <!-- Artigo 1: Privacidade de Dados -->
+        <article>
+            <div>
+                <img src="privacidade_icone.png" alt="Ícone de privacidade e segurança">
+                <h2>1. Privacidade vs. Conveniência</h2>
+                <p class="artigo-autor">Por: Wesllin</p>
+                <p><strong>O Dilema:</strong> Aceitamos termos de uso sem ler e entregamos nossos dados em troca de aplicativos gratuitos e personalizados.</p>
+                <p><strong>Proposta e Solução:</strong> Utilizar navegadores focados em privacidade (como Brave ou DuckDuckGo), limitar as permissões de aplicativos no celular e exigir das empresas maior transparência (com base na LGPD).</p>
+                <button>❤️<span>0</span></button>
+                <button>👎<span>0</span></button>
+            </div>
+            <div>
+                <img src="privacidade_banner.png" alt="Imagem ilustrando privacidade na internet" class="imagem">
+            </div>
+        </article>
+
+        <!-- Artigo 2: Saúde Mental e Telas -->
+        <article>
+            <div>
+                <img src="saude_icone.png" alt="Ícone de bem-estar digital">
+                <h2>2. Conexão Contínua e Saúde Mental</h2>
+                <p class="artigo-autor">Por: Wesllin</p>
+                <p><strong>O Dilema:</strong> O uso excessivo de redes sociais gera vício, ansiedade e comparação social tóxica alimentada pela busca por aprovação instantânea.</p>
+                <p><strong>Proposta e Solução:</strong> Praticar a "Higiene Digital". Defina limites diários de tempo de tela, desative notificações não essenciais e reserve momentos do dia livres de dispositivos eletrônicos.</p>
+                <button>❤️<span>0</span></button>
+                <button>👎<span>0</span></button>
+            </div>
+            <div>
+                <img src="saude_banner.png" alt="Imagem representando o uso consciente do celular" class="imagem">
+            </div>
+        </article>
+
+        <!-- Artigo 3: Inteligência Artificial e Ética -->
+        <article>
+            <div>
+                <img src="ia_icone.png" alt="Ícone de Inteligência Artificial">
+                <h2>3. IA, Algoritmos e Bolhas Informacionais</h2>
+                <p class="artigo-autor">Por: Wesllin</p>
+                <p><strong>O Dilema:</strong> Os algoritmos nos mostram apenas o que queremos ver, aumentando a polarização e espalhando desinformação sem checagem prévia.</p>
+                <p><strong>Proposta e Solução:</strong> Educação midiática nas escolas e empresas. Sempre verifique fontes antes de compartilhar conteúdos e busque ativamente consumir notícias de múltiplos veículos com perspectivas diferentes.</p>
+                <button>❤️<span>0</span></button>
+                <button>👎<span>0</span></button>
+            </div>
+            <div>
+                <img src="ia_banner.png" alt="Imagem ilustrando conexões de rede e inteligência artificial" class="imagem">
+            </div>
+        </article>
+
+        <!-- Artigo 4: Boas-vindas ao Blog -->
+        <article>
+            <div>
+                <img src="livrosus.png" alt="Livro com símbolos de tecnologia">
+                <h2>Bem-vindos à discussão ética da tecnologia!</h2>
+                <p class="artigo-autor">Por: Wesllin</p>
+                <p>Boas-vindas ao meu blog! Aqui vamos analisar os impactos da tecnologia na nossa rotina e buscar soluções para tornar a internet um espaço mais seguro, saudável e consciente para todos.</p>
+                <button>❤️<span>0</span></button>
+                <button>👎<span>0</span></button>
+            </div>
+            <div>
+                <img src="livrosus.png" alt="Livro com símbolos de tecnologia" class="imagem">
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <p>© 2026 Meu Blog Tech | Desenvolvido por Wesllin</p>
+    </footer>
+
+    <script>
+        const botoes = document.querySelectorAll("button");
+        botoes.forEach(function (botao) {
+            let curtiu = false;
+            botao.addEventListener("click", botaoClicado);
+            function botaoClicado() {
+                console.log("fui clicado");
+                let texto = botao.querySelector("span");
+                if (curtiu === false) {
+                    texto.textContent++;
+                    curtiu = true;
+                } else {
+                    texto.textContent--;
+                    curtiu = false;
+                }
+            }
+        })
+    </script>
+
+</body>
+
+</html>
