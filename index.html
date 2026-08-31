@@ -4,172 +4,315 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Tech - Dilemas Digitais</title>
+    <title>Blog Tech - Dilemas Digitais 2077</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        header {
-            background-color: #d11fe9;
-            color: #FFFFFF;
-            text-align: center;
-            max-width: 800px;
-            margin-bottom: 30px;
-            margin: 0 auto;
-            padding: 10px;
+        :root {
+            --neon-pink: #ff0055;
+            --neon-cyan: #00f3ff;
+            --neon-yellow: #fcee0a;
+            --bg-dark: #08090d;
+            --card-bg: rgba(16, 18, 27, 0.85);
+            --text-color: #e0e6ed;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Rajdhani', sans-serif;
         }
 
         body {
-            background-color: yellow;
+            background-color: var(--bg-dark);
+            color: var(--text-color);
+            background-image: 
+                radial-gradient(circle at 50% 10%, rgba(0, 243, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 0, 85, 0.08) 0%, transparent 50%);
+            min-height: 100vh;
+            padding-bottom: 40px;
         }
 
+        /* Cabeçalho Cyberpunk */
+        header {
+            background: rgba(13, 14, 22, 0.9);
+            border: 2px solid var(--neon-pink);
+            box-shadow: 0 0 15px var(--neon-pink), inset 0 0 15px rgba(255, 0, 85, 0.2);
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 25px;
+            text-align: center;
+            clip-path: polygon(0 0, 95% 0, 100% 25px, 100% 100%, 5% 100%, 0 calc(100% - 25px));
+        }
+
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            text-transform: uppercase;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px var(--neon-cyan);
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: var(--neon-yellow);
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        /* Container Principal */
         main {
-            background-color: #d4adcf;
-            color: #183C63;
             display: flex;
-            align-items: center;
-            margin-bottom: 30px;
             flex-direction: column;
-            gap: 20px;
-            padding: 20px 0;
+            align-items: center;
+            gap: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 15px;
         }
 
-        img {
-            width: 80px;
-            height: 80px;
-        }
-
-        div p {
-            font-weight: bold;
-        }
-
-        .artigo-autor {
-            font-weight: bold;
-        }
-
-        .imagem {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
+        /* Cartões de Artigo Cyberpunk */
         article {
+            background: var(--card-bg);
+            border-left: 4px solid var(--neon-cyan);
+            border-right: 1px solid rgba(0, 243, 255, 0.2);
+            border-top: 1px solid rgba(0, 243, 255, 0.2);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
+            padding: 25px;
+            width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: rgb(236, 214, 10);
-            padding: 20px;
-            border-radius: 10px;
-            width: 90%;
+            gap: 20px;
+            clip-path: polygon(0 0, 98% 0, 100% 40px, 100% 100%, 2% 100%, 0 calc(100% - 20px));
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
+        article:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+            border-left-color: var(--neon-pink);
+        }
+
+        .conteudo-artigo {
+            flex: 1;
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icone-artigo {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            border: 1px solid var(--neon-cyan);
+        }
+
+        .artigo-autor {
+            color: var(--neon-cyan);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        article p {
+            margin-bottom: 8px;
+            font-size: 1rem;
+            color: #c4cdd5;
+        }
+
+        article p strong {
+            color: var(--neon-yellow);
+        }
+
+        .imagem-destaque {
+            width: 170px;
+            height: 170px;
+            object-fit: cover;
+            border: 1px solid var(--neon-pink);
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.4);
+            filter: saturate(1.2) contrast(1.1);
+            clip-path: polygon(15% 0, 100% 0, 100% 85%, 85% 100%, 0 100%, 0 15%);
+        }
+
+        /* Botões Neons */
+        button {
+            background: transparent;
+            color: var(--neon-cyan);
+            border: 1px solid var(--neon-cyan);
+            padding: 8px 18px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            margin-right: 10px;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 12px var(--neon-cyan);
+        }
+
+        button.ativo {
+            background: var(--neon-pink);
+            color: #fff;
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 15px var(--neon-pink);
+        }
+
+        /* Rodapé Cyberpunk */
         footer {
-            background-color: #183C63;
-            color: white;
+            background: #050508;
+            border-top: 1px solid var(--neon-pink);
+            color: var(--neon-cyan);
             text-align: center;
             padding: 20px;
+            margin-top: 40px;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            box-shadow: 0 -5px 15px rgba(255, 0, 85, 0.2);
         }
 
-        /* Estilo básico para ajustar espaçamento dos botões nos artigos */
-        button {
-            cursor: pointer;
-            margin-top: 10px;
+        /* Responsividade */
+        @media (max-width: 650px) {
+            article {
+                flex-direction: column-reverse;
+                text-align: center;
+            }
+            h2 {
+                justify-content: center;
+            }
+            .imagem-destaque {
+                width: 100%;
+                height: 180px;
+            }
         }
     </style>
 </head>
 
 <body>
+
     <header>
-        <h1>Meu Blog Tech: Dilemas Digitais</h1>
-        <p>Refletindo sobre ética, tecnologia e soluções para o mundo digital</p>
-        <button>❤️<span>0</span></button>
-        <button>👍<span>0</span></button>
+        <h1>Meu Blog Tech // Dilemas Digitais</h1>
+        <p>[ SISTEMA DE ÉTICA & TECNOLOGIA FUTURA ]</p>
+        <button class="btn-interacao">❤️ <span>0</span></button>
+        <button class="btn-interacao">👍 <span>0</span></button>
     </header>
 
     <main>
-        <!-- Artigo 1: Privacidade de Dados -->
         <article>
-            <div>
-                <img src="perfeto.jpeg" alt="Ícone de privacidade e segurança">
-                <h2>1. Privacidade vs. Conveniência</h2>
-                <p class="artigo-autor">Por: Wesllin</p>
+            <div class="conteudo-artigo">
+                <h2>
+                    <img src="perfeto.jpeg" alt="Privacidade" class="icone-artigo">
+                    01. Privacidade vs. Conveniência
+                </h2>
+                <p class="artigo-autor">// Autor: Wesllin</p>
                 <p><strong>O Dilema:</strong> Aceitamos termos de uso sem ler e entregamos nossos dados em troca de aplicativos gratuitos e personalizados.</p>
-                <p><strong>Proposta e Solução:</strong> Utilizar navegadores focados em privacidade (como Brave ou DuckDuckGo), limitar as permissões de aplicativos no celular e exigir das empresas maior transparência (com base na LGPD).</p>
-                <button>❤️<span>0</span></button>
-                <button>👎<span>0</span></button>
+                <p><strong>Proposta e Solução:</strong> Utilizar navegadores focados em privacidade (como Brave ou DuckDuckGo), limitar as permissões de aplicativos no celular e exigir transparência com base na LGPD.</p>
+                <button class="btn-interacao">❤️ <span>0</span></button>
+                <button class="btn-interacao">👎 <span>0</span></button>
             </div>
             <div>
-                <img src="viciado.jpeg" alt="Imagem ilustrando privacidade na internet" class="imagem">
+                <img src="viciado.jpeg" alt="Privacidade na internet" class="imagem-destaque">
             </div>
         </article>
 
-        <!-- Artigo 2: Saúde Mental e Telas -->
         <article>
-            <div>
-                <img src="desanimos.jpeg" alt="Ícone de bem-estar digital">
-                <h2>2. Conexão Contínua e Saúde Mental</h2>
-                <p class="artigo-autor">Por: Wesllin</p>
+            <div class="conteudo-artigo">
+                <h2>
+                    <img src="desanimos.jpeg" alt="Saúde Mental" class="icone-artigo">
+                    02. Conexão Contínua e Saúde Mental
+                </h2>
+                <p class="artigo-autor">// Autor: Wesllin</p>
                 <p><strong>O Dilema:</strong> O uso excessivo de redes sociais gera vício, ansiedade e comparação social tóxica alimentada pela busca por aprovação instantânea.</p>
-                <p><strong>Proposta e Solução:</strong> Praticar a "Higiene Digital". Defina limites diários de tempo de tela, desative notificações não essenciais e reserve momentos do dia livres de dispositivos eletrônicos.</p>
-                <button>❤️<span>0</span></button>
-                <button>👎<span>0</span></button>
+                <p><strong>Proposta e Solução:</strong> Praticar a "Higiene Digital". Defina limites diários de tempo de tela, desative notificações não essenciais e reserve momentos sem dispositivos.</p>
+                <button class="btn-interacao">❤️ <span>0</span></button>
+                <button class="btn-interacao">👎 <span>0</span></button>
             </div>
             <div>
-                <img src="aura.jpg" alt="Imagem representando o uso consciente do celular" class="imagem">
+                <img src="aura.jpg" alt="Uso consciente do celular" class="imagem-destaque">
             </div>
         </article>
 
-        <!-- Artigo 3: Inteligência Artificial e Ética -->
         <article>
-            <div>
-                <img src="cadeia.jpeg" alt="Ícone de Inteligência Artificial">
-                <h2>3. IA, Algoritmos e Bolhas Informacionais</h2>
-                <p class="artigo-autor">Por: Wesllin</p>
+            <div class="conteudo-artigo">
+                <h2>
+                    <img src="cadeia.jpeg" alt="Inteligência Artificial" class="icone-artigo">
+                    03. IA, Algoritmos e Bolhas Informacionais
+                </h2>
+                <p class="artigo-autor">// Autor: Wesllin</p>
                 <p><strong>O Dilema:</strong> Os algoritmos nos mostram apenas o que queremos ver, aumentando a polarização e espalhando desinformação sem checagem prévia.</p>
-                <p><strong>Proposta e Solução:</strong> Educação midiática nas escolas e empresas. Sempre verifique fontes antes de compartilhar conteúdos e busque ativamente consumir notícias de múltiplos veículos com perspectivas diferentes.</p>
-                <button>❤️<span>0</span></button>
-                <button>👎<span>0</span></button>
+                <p><strong>Proposta e Solução:</strong> Educação midiática nas escolas e empresas. Verifique fontes antes de compartilhar conteúdos e busque perspectivas diferentes.</p>
+                <button class="btn-interacao">❤️ <span>0</span></button>
+                <button class="btn-interacao">👎 <span>0</span></button>
             </div>
             <div>
-                <img src="matrx.jpeg" alt="Imagem ilustrando conexões de rede e inteligência artificial" class="imagem">
+                <img src="matrx.jpeg" alt="Rede e Inteligência Artificial" class="imagem-destaque">
             </div>
         </article>
 
-        <!-- Artigo 4: Boas-vindas ao Blog -->
         <article>
-            <div>
-                <img src="susto.jpeg" alt="Livro com símbolos de tecnologia">
-                <h2>Bem-vindos à discussão ética da tecnologia!</h2>
-                <p class="artigo-autor">Por: Wesllin</p>
+            <div class="conteudo-artigo">
+                <h2>
+                    <img src="susto.jpeg" alt="Discussão Ética" class="icone-artigo">
+                    04. Discussão Ética da Tecnologia
+                </h2>
+                <p class="artigo-autor">// Autor: Wesllin</p>
                 <p>Boas-vindas ao meu blog! Aqui vamos analisar os impactos da tecnologia na nossa rotina e buscar soluções para tornar a internet um espaço mais seguro, saudável e consciente para todos.</p>
-                <button>❤️<span>0</span></button>
-                <button>👎<span>0</span></button>
+                <button class="btn-interacao">❤️ <span>0</span></button>
+                <button class="btn-interacao">👎 <span>0</span></button>
             </div>
             <div>
-                <img src="haker.jpeg" alt="Livro com símbolos de tecnologia" class="imagem">
+                <img src="haker.jpeg" alt="Tecnologia" class="imagem-destaque">
             </div>
         </article>
     </main>
 
     <footer>
-        <p>© 2026 Meu Blog Tech | Desenvolvido por Wesllin</p>
+        <p>© 2026 MEU BLOG TECH // DEVELOPED BY WESLLIN</p>
     </footer>
 
     <script>
-        const botoes = document.querySelectorAll("button");
+        const botoes = document.querySelectorAll(".btn-interacao");
+
         botoes.forEach(function (botao) {
             let curtiu = false;
-            botao.addEventListener("click", botaoClicado);
-            function botaoClicado() {
-                console.log("fui clicado");
-                let texto = botao.querySelector("span");
-                if (curtiu === false) {
-                    texto.textContent++;
+
+            botao.addEventListener("click", function () {
+                let contador = botao.querySelector("span");
+                let valorAtual = parseInt(contador.textContent);
+
+                if (!curtiu) {
+                    contador.textContent = valorAtual + 1;
+                    botao.classList.add("ativo");
                     curtiu = true;
                 } else {
-                    texto.textContent--;
+                    contador.textContent = valorAtual - 1;
+                    botao.classList.remove("ativo");
                     curtiu = false;
                 }
-            }
-        })
+            });
+        });
     </script>
 
 </body>
