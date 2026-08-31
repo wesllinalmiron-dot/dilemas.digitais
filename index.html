@@ -63,6 +63,11 @@
             overflow-x: hidden;
         }
 
+        /* Bloqueia a rolagem enquanto a verificação de idade está ativa */
+        body.age-gate-locked {
+            overflow: hidden;
+        }
+
         /* Efeito CRT Scanlines Overlay */
         body::before {
             content: " ";
@@ -74,6 +79,57 @@
             z-index: 999;
             pointer-events: none;
             opacity: var(--scanline-opacity);
+        }
+
+        /* Overlay do Age Gate */
+        .age-gate-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 6, 8, 0.98);
+            z-index: 3000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .age-gate-box {
+            background: var(--card-bg);
+            border: 2px solid var(--neon-pink);
+            box-shadow: 0 0 30px var(--shadow-pink);
+            padding: 35px 25px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            clip-path: polygon(0 0, 95% 0, 100% 25px, 100% 100%, 5% 100%, 0 calc(100% - 25px));
+        }
+
+        .age-gate-box h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-pink);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+
+        .age-gate-box p {
+            color: var(--text-color);
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+
+        .age-gate-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .age-gate-denied-msg {
+            display: none;
+            color: var(--neon-pink);
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: bold;
+            margin-top: 20px;
         }
 
         /* HUD Status Bar */
@@ -479,7 +535,22 @@
     </style>
 </head>
 
-<body>
+<body class="age-gate-locked">
+
+    <!-- Verificação de Idade (Age Gate) -->
+    <div class="age-gate-modal" id="age-gate">
+        <div class="age-gate-box">
+            <h2>[ VERIFICAÇÃO DE IDADE ]</h2>
+            <p>Confirme a sua faixa etária para acessar a rede do Blog Tech 2077:</p>
+            <div class="age-gate-actions">
+                <button class="btn-hud cyan" id="btn-over-18">TENHO +18 ANOS</button>
+                <button class="btn-hud pink" id="btn-under-18">TENHO -18 ANOS</button>
+            </div>
+            <div class="age-gate-denied-msg" id="age-denied-msg">
+                [ ACESSO NEGADO: VOCÊ PRECISA TER MAIS DE 18 ANOS PARA ACESSAR ESTE SITE ]
+            </div>
+        </div>
+    </div>
 
     <!-- HUD Status Superior com Data, Hora e Ações -->
     <div class="hud-status-bar">
@@ -623,6 +694,21 @@
     </footer>
 
     <script>
+        // Lógica de Verificação de Idade
+        const ageGate = document.getElementById('age-gate');
+        const btnOver18 = document.getElementById('btn-over-18');
+        const btnUnder18 = document.getElementById('btn-under-18');
+        const ageDeniedMsg = document.getElementById('age-denied-msg');
+
+        btnOver18.addEventListener('click', () => {
+            ageGate.style.display = 'none';
+            document.body.classList.remove('age-gate-locked');
+        });
+
+        btnUnder18.addEventListener('click', () => {
+            ageDeniedMsg.style.display = 'block';
+        });
+
         // Relógio e Data em Tempo Real
         function updateClock() {
             const now = new Date();
