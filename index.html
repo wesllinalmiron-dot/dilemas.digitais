@@ -7,36 +7,39 @@
     <title>Blog Tech - Dilemas Digitais 2077</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            /* Tema Escuro (Padrão) */
+            /* Tema Escuro Neon (Padrão) */
             --neon-pink: #ff0055;
             --neon-cyan: #00f3ff;
             --neon-yellow: #fcee0a;
-            --bg-dark: #08090d;
-            --card-bg: rgba(16, 18, 27, 0.9);
-            --header-bg: rgba(13, 14, 22, 0.95);
+            --neon-green: #00ff66;
+            --bg-dark: #050608;
+            --card-bg: rgba(12, 14, 22, 0.92);
+            --header-bg: rgba(10, 11, 16, 0.95);
             --text-color: #e0e6ed;
-            --text-muted: #c4cdd5;
-            --border-color: rgba(0, 243, 255, 0.2);
-            --shadow-color: rgba(0, 243, 255, 0.15);
-            --bg-radial-1: rgba(0, 243, 255, 0.08);
-            --bg-radial-2: rgba(255, 0, 85, 0.08);
+            --text-muted: #9aaec4;
+            --border-color: rgba(0, 243, 255, 0.3);
+            --shadow-cyan: rgba(0, 243, 255, 0.25);
+            --shadow-pink: rgba(255, 0, 85, 0.25);
+            --grid-color: rgba(0, 243, 255, 0.03);
+            --scanline-opacity: 0.4;
         }
 
         [data-theme="light"] {
-            /* Tema Claro Cyberpunk */
-            --bg-dark: #f0f4f8;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --header-bg: rgba(240, 244, 248, 0.95);
-            --text-color: #1a1d24;
-            --text-muted: #4a5568;
-            --border-color: rgba(0, 150, 255, 0.3);
-            --shadow-color: rgba(0, 0, 0, 0.08);
-            --bg-radial-1: rgba(0, 150, 255, 0.1);
-            --bg-radial-2: rgba(255, 0, 85, 0.05);
+            /* Tema Claro Cyberpunk High-Contrast */
+            --bg-dark: #e6ebf2;
+            --card-bg: rgba(255, 255, 255, 0.94);
+            --header-bg: rgba(235, 240, 248, 0.98);
+            --text-color: #0f141c;
+            --text-muted: #4a586e;
+            --border-color: rgba(0, 120, 215, 0.4);
+            --shadow-cyan: rgba(0, 150, 255, 0.15);
+            --shadow-pink: rgba(255, 0, 85, 0.15);
+            --grid-color: rgba(0, 0, 0, 0.04);
+            --scanline-opacity: 0.1;
         }
 
         * {
@@ -44,71 +47,130 @@
             margin: 0;
             padding: 0;
             font-family: 'Rajdhani', sans-serif;
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         body {
             background-color: var(--bg-dark);
             color: var(--text-color);
             background-image: 
-                radial-gradient(circle at 50% 10%, var(--bg-radial-1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, var(--bg-radial-2) 0%, transparent 50%);
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 30px 30px;
             min-height: 100vh;
-            padding-bottom: 40px;
+            padding-bottom: 60px;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        /* Controles do Cabeçalho */
-        .top-bar {
+        /* Efeito CRT Scanlines Overlay */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 999;
+            pointer-events: none;
+            opacity: var(--scanline-opacity);
+        }
+
+        /* Top Bar de Status HUD com Data e Relógio */
+        .hud-status-bar {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 12px 20px;
             display: flex;
-            justify-content: flex-end;
-            max-width: 900px;
-            margin: 15px auto 0;
-            padding: 0 15px;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--neon-cyan);
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.2);
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
+        .hud-status-bar .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hud-status-bar .clock-display {
+            color: var(--neon-yellow);
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(252, 238, 10, 0.5);
+        }
+
+        .hud-status-bar .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--neon-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--neon-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        /* Botão Alternar Tema */
         .btn-theme {
-            background: var(--card-bg);
-            color: var(--neon-cyan);
-            border: 1px solid var(--neon-cyan);
-            padding: 6px 14px;
+            background: transparent;
+            color: var(--neon-yellow);
+            border: 1px solid var(--neon-yellow);
+            padding: 6px 16px;
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 700;
             cursor: pointer;
-            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            letter-spacing: 1px;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
         }
 
         .btn-theme:hover {
-            background: var(--neon-cyan);
+            background: var(--neon-yellow);
             color: #000;
+            box-shadow: 0 0 12px var(--neon-yellow);
         }
 
-        /* Cabeçalho Cyberpunk */
+        /* Header Cyberpunk */
         header {
             background: var(--header-bg);
             border: 2px solid var(--neon-pink);
-            box-shadow: 0 0 15px var(--neon-pink), inset 0 0 15px rgba(255, 0, 85, 0.15);
-            max-width: 900px;
-            margin: 15px auto 30px;
-            padding: 30px 25px;
+            box-shadow: 0 0 20px var(--shadow-pink), inset 0 0 15px var(--shadow-pink);
+            max-width: 1000px;
+            margin: 20px auto 40px;
+            padding: 35px 25px;
             text-align: center;
-            clip-path: polygon(0 0, 95% 0, 100% 25px, 100% 100%, 5% 100%, 0 calc(100% - 25px));
+            position: relative;
+            clip-path: polygon(0 0, 96% 0, 100% 30px, 100% 100%, 4% 100%, 0 calc(100% - 30px));
         }
 
-        header h1 {
+        .glitch-title {
             font-family: 'Orbitron', sans-serif;
             color: var(--text-color);
             text-transform: uppercase;
-            font-size: 2.2rem;
-            letter-spacing: 2px;
-            text-shadow: 0 0 8px var(--neon-cyan);
-            margin-bottom: 8px;
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            position: relative;
+            text-shadow: 0 0 10px var(--neon-cyan);
+            margin-bottom: 10px;
         }
 
-        header p {
-            color: var(--neon-pink);
-            font-weight: 700;
+        header p.subtitle {
+            color: var(--neon-cyan);
+            font-family: 'Share Tech Mono', monospace;
             font-size: 1.1rem;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             margin-bottom: 20px;
         }
 
@@ -117,33 +179,44 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 35px;
-            max-width: 900px;
+            gap: 40px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 0 15px;
+            padding: 0 20px;
         }
 
         /* Cartões de Artigo Cyberpunk */
         article {
             background: var(--card-bg);
-            border-left: 5px solid var(--neon-cyan);
+            border-left: 6px solid var(--neon-cyan);
             border-right: 1px solid var(--border-color);
             border-top: 1px solid var(--border-color);
             border-bottom: 1px solid var(--border-color);
-            box-shadow: 0 4px 15px var(--shadow-color);
-            padding: 30px;
+            box-shadow: 0 5px 20px var(--shadow-cyan);
+            padding: 35px;
             width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 25px;
-            clip-path: polygon(0 0, 98% 0, 100% 30px, 100% 100%, 2% 100%, 0 calc(100% - 20px));
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            gap: 30px;
+            position: relative;
+            clip-path: polygon(0 0, 98% 0, 100% 35px, 100% 100%, 2% 100%, 0 calc(100% - 25px));
+        }
+
+        article::after {
+            content: "SYS.LOG // 2077";
+            position: absolute;
+            top: 8px;
+            right: 15px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--neon-cyan);
+            opacity: 0.6;
         }
 
         article:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.25);
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px var(--shadow-pink);
             border-left-color: var(--neon-pink);
         }
 
@@ -154,119 +227,143 @@
         h2 {
             font-family: 'Orbitron', sans-serif;
             color: var(--text-color);
-            font-size: 1.4rem;
-            margin-bottom: 6px;
+            font-size: 1.5rem;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 12px;
+            letter-spacing: 1px;
         }
 
         .icone-artigo {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 4px;
             border: 1px solid var(--neon-cyan);
             object-fit: cover;
+            box-shadow: 0 0 8px var(--shadow-cyan);
         }
 
         .artigo-autor {
             color: var(--neon-pink);
-            font-weight: 700;
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: bold;
             text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 1.5px;
-            margin-bottom: 15px;
-        }
-
-        .artigo-texto {
-            line-height: 1.6;
-            font-size: 1.05rem;
-            color: var(--text-muted);
-            margin-bottom: 15px;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            display: block;
         }
 
         .artigo-secao {
-            margin-bottom: 12px;
+            margin-bottom: 18px;
         }
 
         .artigo-secao strong {
-            color: var(--neon-cyan);
-            font-size: 1.1rem;
+            color: var(--neon-yellow);
+            font-size: 1.15rem;
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.5px;
         }
 
-        .imagem-destaque {
-            width: 200px;
-            height: 220px;
-            object-fit: cover;
-            border: 1px solid var(--neon-pink);
-            box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
-            filter: saturate(1.2) contrast(1.1);
-            clip-path: polygon(15% 0, 100% 0, 100% 85%, 85% 100%, 0 100%, 0 15%);
+        .artigo-texto {
+            line-height: 1.7;
+            font-size: 1.05rem;
+            color: var(--text-muted);
+        }
+
+        .imagem-destaque-container {
+            position: relative;
             flex-shrink: 0;
         }
 
-        /* Botões de Interação */
+        .imagem-destaque {
+            width: 220px;
+            height: 250px;
+            object-fit: cover;
+            border: 1px solid var(--neon-pink);
+            box-shadow: 0 0 15px var(--shadow-pink);
+            filter: saturate(1.3) contrast(1.1);
+            clip-path: polygon(15% 0, 100% 0, 100% 85%, 85% 100%, 0 100%, 0 15%);
+            display: block;
+        }
+
+        .imagem-destaque-container::before {
+            content: "[IMG_DATA]";
+            position: absolute;
+            bottom: -18px;
+            left: 0;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--neon-pink);
+        }
+
+        /* Botões Neons Interativos */
         .acoes-artigo {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 25px;
         }
 
         button.btn-interacao {
-            background: transparent;
+            background: rgba(0, 0, 0, 0.3);
             color: var(--text-color);
             border: 1px solid var(--neon-cyan);
-            padding: 8px 16px;
+            padding: 10px 20px;
             font-family: 'Orbitron', sans-serif;
             font-size: 0.85rem;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
-            clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
-            transition: all 0.2s ease;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         button.btn-interacao:hover {
             background: var(--neon-cyan);
             color: #000;
-            box-shadow: 0 0 12px var(--neon-cyan);
+            box-shadow: 0 0 15px var(--neon-cyan);
         }
 
         button.btn-interacao.ativo {
             background: var(--neon-pink);
             color: #fff;
             border-color: var(--neon-pink);
-            box-shadow: 0 0 15px var(--neon-pink);
+            box-shadow: 0 0 18px var(--neon-pink);
         }
 
-        /* Rodapé */
+        /* Rodapé Cyberpunk */
         footer {
             background: var(--header-bg);
             border-top: 2px solid var(--neon-pink);
             color: var(--neon-cyan);
             text-align: center;
-            padding: 25px;
-            margin-top: 50px;
+            padding: 30px 20px;
+            margin-top: 60px;
             font-family: 'Orbitron', sans-serif;
-            letter-spacing: 2px;
-            box-shadow: 0 -5px 15px rgba(255, 0, 85, 0.15);
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            box-shadow: 0 -5px 20px var(--shadow-pink);
         }
 
         /* Responsividade */
-        @media (max-width: 700px) {
+        @media (max-width: 768px) {
             article {
                 flex-direction: column-reverse;
                 align-items: center;
-                text-align: left;
-            }
-            h2 {
-                justify-content: flex-start;
             }
             .imagem-destaque {
                 width: 100%;
-                height: 200px;
+                height: 220px;
+            }
+            .imagem-destaque-container {
+                width: 100%;
+            }
+            .glitch-title {
+                font-size: 1.8rem;
             }
         }
     </style>
@@ -274,126 +371,139 @@
 
 <body>
 
-    <div class="top-bar">
-        <button class="btn-theme" id="btn-theme"><span>🌙 MODO ESCURO</span></button>
+    <!-- HUD Status Superior com Data e Hora Real -->
+    <div class="hud-status-bar">
+        <div class="status-item">
+            <span class="pulse-dot"></span>
+            <span>NET.LINK: ONLINE</span>
+        </div>
+        <div class="status-item clock-display">
+            <span>SYS_TIME: </span><span id="live-clock">00/00/0000 -- 00:00:00</span>
+        </div>
+        <button class="btn-theme" id="btn-theme">MODO ESCURO</button>
     </div>
 
+    <!-- Cabeçalho Principal -->
     <header>
-        <h1>Meu Blog Tech // Dilemas Digitais</h1>
-        <p>[ SISTEMA DE ÉTICA & TECNOLOGIA FUTURA ]</p>
-        <div class="acoes-artigo" style="justify-content: center; margin-top: 0;">
-            <button class="btn-interacao">❤️ <span>0</span></button>
-            <button class="btn-interacao">👍 <span>0</span></button>
+        <h1 class="glitch-title">MEU BLOG TECH // DILEMAS DIGITAIS</h1>
+        <p class="subtitle">[ SISTEMA DE ÉTICA & TECNOLOGIA FUTURA ]</p>
+        <div class="acoes-artigo" style="justify-content: center; margin-top: 10px;">
+            <button class="btn-interacao">❤️ <span>154</span></button>
+            <button class="btn-interacao">👍 <span>320</span></button>
         </div>
     </header>
 
     <main>
+        <!-- Artigo 01 -->
         <article>
             <div class="conteudo-artigo">
                 <h2>
                     <img src="perfeto.jpeg" alt="Privacidade" class="icone-artigo">
                     01. Privacidade vs. Conveniência
                 </h2>
-                <p class="artigo-autor">// Autor: Wesllin</p>
+                <span class="artigo-autor">// AUTOR: WESLLIN // REF: SEC_01</span>
                 
                 <div class="artigo-secao">
-                    <strong>// O Dilema da Era Conectada:</strong>
+                    <strong>// O DILEMA DA ERA CONECTADA:</strong>
                     <p class="artigo-texto">
                         Na sociedade hyperconectada, aceitamos termos de uso longos e complexos sem ler, entregando voluntariamente nossos dados mais íntimos em troca de conveniência. Localização em tempo real, preferências de consumo, histórico de navegação e dados biométricos são constantemente monetizados por grandes corporações para alimentar algoritmos de recomendação e criar perfis comportamentais ultraprecisos.
                     </p>
                 </div>
 
                 <div class="artigo-secao">
-                    <strong>// Proposta & Arquitetura de Solução:</strong>
+                    <strong>// ARQUITETURA DE SOLUÇÃO:</strong>
                     <p class="artigo-texto">
-                        Para retomar o controle sobre nossa identidade digital, é essencial adotar a "Higiene da Privacidade". Isso inclui migrar para navegadores focados em proteção de dados (como Brave ou DuckDuckGo), utilizar redes privadas virtuais (VPNs), habilitar a autenticação em dois fatores e restringir permissões desnecessárias em aplicativos móveis. Além disso, devemos exigir a aplicação rigorosa de legislações como a LGPD para garantir transparência e autonomia sobre nossas informações.
+                        Para retomar o controle sobre nossa identidade digital, é essencial adotar a "Higiene da Privacidade". Isso inclui migrar para navegadores focados em proteção de dados (como Brave ou DuckDuckGo), utilizar redes privadas virtuais (VPNs), habilitar a autenticação em dois fatores e restringir permissões desnecessárias em aplicativos móveis. Além disso, devemos exigir a aplicação rigorosa de legislações como a LGPD para garantir transparência e autonomia.
                     </p>
                 </div>
 
                 <div class="acoes-artigo">
-                    <button class="btn-interacao">❤️ <span>0</span></button>
-                    <button class="btn-interacao">👎 <span>0</span></button>
+                    <button class="btn-interacao">❤️ <span>42</span></button>
+                    <button class="btn-interacao">👎 <span>3</span></button>
                 </div>
             </div>
-            <div>
+            <div class="imagem-destaque-container">
                 <img src="viciado.jpeg" alt="Privacidade na internet" class="imagem-destaque">
             </div>
         </article>
 
+        <!-- Artigo 02 -->
         <article>
             <div class="conteudo-artigo">
                 <h2>
                     <img src="desanimos.jpeg" alt="Saúde Mental" class="icone-artigo">
                     02. Conexão Contínua e Saúde Mental
                 </h2>
-                <p class="artigo-autor">// Autor: Wesllin</p>
+                <span class="artigo-autor">// AUTOR: WESLLIN // REF: SEC_02</span>
 
                 <div class="artigo-secao">
-                    <strong>// A Sobrecarga Sensorial:</strong>
+                    <strong>// A SOBRECARGA SENSORIAL:</strong>
                     <p class="artigo-texto">
                         A necessidade de estar permanentemente online gerou o fenômeno da hiperconexão. O fluxo ininterrupto de notificações, a cultura da comparação contínua induzida pelas redes sociais e a busca compulsiva por validação digital têm resultado em taxas crescentes de ansiedade, Burnout e distúrbios do sono. O cérebro humano não foi projetado para processar estímulos ininterruptos sem momentos de pausa e introspecção.
                     </p>
                 </div>
 
                 <div class="artigo-secao">
-                    <strong>// Estratégia de Desconexão Consciente:</strong>
+                    <strong>// DESCONEXÃO CONSCIENTE:</strong>
                     <p class="artigo-texto">
                         A solução exige estabelecer limites claros entre a vida física e a virtual através do "Minimalismo Digital". Recomenda-se definir janelas de tempo sem telas, desativar notificações não essenciais, evitar o uso de dispositivos pelo menos uma hora antes de dormir e reservar momentos diários para atividades totalmente desconectadas do ecossistema digital.
                     </p>
                 </div>
 
                 <div class="acoes-artigo">
-                    <button class="btn-interacao">❤️ <span>0</span></button>
-                    <button class="btn-interacao">👎 <span>0</span></button>
+                    <button class="btn-interacao">❤️ <span>89</span></button>
+                    <button class="btn-interacao">👎 <span>1</span></button>
                 </div>
             </div>
-            <div>
+            <div class="imagem-destaque-container">
                 <img src="aura.jpg" alt="Uso consciente do celular" class="imagem-destaque">
             </div>
         </article>
 
+        <!-- Artigo 03 -->
         <article>
             <div class="conteudo-artigo">
                 <h2>
                     <img src="cadeia.jpeg" alt="Inteligência Artificial" class="icone-artigo">
                     03. IA, Algoritmos e Bolhas Informacionais
                 </h2>
-                <p class="artigo-autor">// Autor: Wesllin</p>
+                <span class="artigo-autor">// AUTOR: WESLLIN // REF: SEC_03</span>
 
                 <div class="artigo-secao">
-                    <strong>// A Fragmentação da Realidade:</strong>
+                    <strong>// A FRAGMENTAÇÃO DA REALIDADE:</strong>
                     <p class="artigo-texto">
                         Os algoritmos de engajamento priorizam conteúdos que geram fortes reações emocionais, frequentemente promovendo a polarização e a criação de "bolhas eco". Dentro dessas bolhas, os usuários são expostos apenas a opiniões que reforçam suas próprias crenças, dificultando o debate saudável, enfraquecendo o senso crítico e facilitando a disseminação em massa de desinformação e fake news.
                     </p>
                 </div>
 
                 <div class="artigo-secao">
-                    <strong>// Letramento Digital e Pensamento Crítico:</strong>
+                    <strong>// LETRAMENTO DIGITAL E ÉTICA:</strong>
                     <p class="artigo-texto">
                         Enfrentar esse cenário exige um esforço consciente de Educação Midiática. Precisamos aprender a checar fontes antes de compartilhar qualquer informação, buscar intencionalmente pontos de vista divergentes para expandir nossa visão de mundo e exigir que plataformas digitais adotem auditorias algorítmicas transparentes e éticas.
                     </p>
                 </div>
 
                 <div class="acoes-artigo">
-                    <button class="btn-interacao">❤️ <span>0</span></button>
-                    <button class="btn-interacao">👎 <span>0</span></button>
+                    <button class="btn-interacao">❤️ <span>112</span></button>
+                    <button class="btn-interacao">👎 <span>5</span></button>
                 </div>
             </div>
-            <div>
+            <div class="imagem-destaque-container">
                 <img src="matrx.jpeg" alt="Rede e Inteligência Artificial" class="imagem-destaque">
             </div>
         </article>
 
+        <!-- Artigo 04 -->
         <article>
             <div class="conteudo-artigo">
                 <h2>
                     <img src="susto.jpeg" alt="Discussão Ética" class="icone-artigo">
                     04. Discussão Ética da Tecnologia
                 </h2>
-                <p class="artigo-autor">// Autor: Wesllin</p>
+                <span class="artigo-autor">// AUTOR: WESLLIN // REF: SEC_04</span>
 
                 <div class="artigo-secao">
-                    <strong>// Construindo um Futuro Consciente:</strong>
+                    <strong>// CONSTRUINDO UM FUTURO CONSCIENTE:</strong>
                     <p class="artigo-texto">
                         Seja muito bem-vindo ao meu espaço de análise tech! O objetivo deste blog é investigar como as inovações tecnológicas moldam a sociedade, a cultura e o comportamento humano. A tecnologia deve ser uma ferramenta de emancipação e progresso, e não um instrumento de alienação ou controle.
                     </p>
@@ -403,22 +513,42 @@
                 </div>
 
                 <div class="acoes-artigo">
-                    <button class="btn-interacao">❤️ <span>0</span></button>
+                    <button class="btn-interacao">❤️ <span>67</span></button>
                     <button class="btn-interacao">👎 <span>0</span></button>
                 </div>
             </div>
-            <div>
+            <div class="imagem-destaque-container">
                 <img src="haker.jpeg" alt="Tecnologia" class="imagem-destaque">
             </div>
         </article>
     </main>
 
     <footer>
-        <p>© 2026 MEU BLOG TECH // DEVELOPED BY WESLLIN</p>
+        <p>© 2077 MEU BLOG TECH // DEVELOPED BY WESLLIN // ALL RIGHTS RESERVED</p>
     </footer>
 
     <script>
-        // Lógica de Contagem de Curtidas
+        // Relógio e Data em Tempo Real (JS)
+        function updateClock() {
+            const now = new Date();
+            
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+
+            const formattedTime = `${day}/${month}/${year} -- ${hours}:${minutes}:${seconds}`;
+            document.getElementById('live-clock').textContent = formattedTime;
+        }
+
+        // Executa o relógio imediatamente e atualiza a cada 1 segundo
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // Sistema Interativo de Botões de Curtida
         const botoes = document.querySelectorAll(".btn-interacao");
 
         botoes.forEach(function (botao) {
@@ -440,7 +570,7 @@
             });
         });
 
-        // Lógica do Modo Claro / Escuro
+        // Alternador de Tema Cyberpunk (Escuro / Claro)
         const btnTheme = document.getElementById("btn-theme");
         const html = document.documentElement;
 
@@ -449,10 +579,10 @@
             
             if (currentTheme === "light") {
                 html.removeAttribute("data-theme");
-                btnTheme.querySelector("span").textContent = "🌙 MODO ESCURO";
+                btnTheme.textContent = "MODO ESCURO";
             } else {
                 html.setAttribute("data-theme", "light");
-                btnTheme.querySelector("span").textContent = "☀️ MODO CLARO";
+                btnTheme.textContent = "MODO CLARO";
             }
         });
     </script>
