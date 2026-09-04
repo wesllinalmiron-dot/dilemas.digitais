@@ -843,22 +843,27 @@
 
     <
 <script>
-    // Lógica de Verificação de Idade
+    // ==========================================
+    // 1. SISTEMA BASE (AGE GATE, CLOCK, THEME, HUD)
+    // ==========================================
     const ageGate = document.getElementById('age-gate');
     const btnOver18 = document.getElementById('btn-over-18');
     const btnUnder18 = document.getElementById('btn-under-18');
     const ageDeniedMsg = document.getElementById('age-denied-msg');
 
-    btnOver18.addEventListener('click', () => {
-        ageGate.style.display = 'none';
-        document.body.classList.remove('age-gate-locked');
-    });
+    if (btnOver18) {
+        btnOver18.addEventListener('click', () => {
+            ageGate.style.display = 'none';
+            document.body.classList.remove('age-gate-locked');
+        });
+    }
 
-    btnUnder18.addEventListener('click', () => {
-        ageDeniedMsg.style.display = 'block';
-    });
+    if (btnUnder18) {
+        btnUnder18.addEventListener('click', () => {
+            ageDeniedMsg.style.display = 'block';
+        });
+    }
 
-    // Relógio e Data em Tempo Real
     function updateClock() {
         const now = new Date();
         const day = String(now.getDate()).padStart(2, '0');
@@ -868,12 +873,15 @@
         const minutes = String(now.getMinutes()).padStart(2, '0');
         const seconds = String(now.getSeconds()).padStart(2, '0');
 
-        document.getElementById('live-clock').textContent = `${day}/${month}/${year} -- ${hours}:${minutes}:${seconds}`;
+        const clockEl = document.getElementById('live-clock');
+        if (clockEl) {
+            clockEl.textContent = `${day}/${month}/${year} -- ${hours}:${minutes}:${seconds}`;
+        }
     }
     updateClock();
     setInterval(updateClock, 1000);
 
-    // Curtidas
+    // Curtidas dos Artigos
     document.querySelectorAll(".btn-interacao").forEach(botao => {
         if (botao.classList.contains('btn-comment-toggle') || botao.classList.contains('btn-share-post')) return;
         let curtiu = false;
@@ -888,26 +896,30 @@
 
     // Alternar Tema
     const btnTheme = document.getElementById("btn-theme");
-    btnTheme.addEventListener("click", () => {
-        const currentTheme = document.documentElement.getAttribute("data-theme");
-        if (currentTheme === "light") {
-            document.documentElement.removeAttribute("data-theme");
-            btnTheme.textContent = "MODO ESCURO";
-        } else {
-            document.documentElement.setAttribute("data-theme", "light");
-            btnTheme.textContent = "MODO CLARO";
-        }
-    });
-
-    // Toast de Notificação
-    function showToast(msg) {
-        const toast = document.getElementById('toast-notification');
-        toast.textContent = msg;
-        toast.style.display = 'block';
-        setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    if (btnTheme) {
+        btnTheme.addEventListener("click", () => {
+            const currentTheme = document.documentElement.getAttribute("data-theme");
+            if (currentTheme === "light") {
+                document.documentElement.removeAttribute("data-theme");
+                btnTheme.textContent = "MODO ESCURO";
+            } else {
+                document.documentElement.setAttribute("data-theme", "light");
+                btnTheme.textContent = "MODO CLARO";
+            }
+        });
     }
 
-    // Modo Compartilhar
+    // Toast Notification
+    function showToast(msg) {
+        const toast = document.getElementById('toast-notification');
+        if (toast) {
+            toast.textContent = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+    }
+
+    // Compartilhar
     document.querySelectorAll('.btn-share-post, #btn-share-page').forEach(btn => {
         btn.addEventListener('click', () => {
             navigator.clipboard.writeText(window.location.href);
@@ -915,7 +927,7 @@
         });
     });
 
-    // Modo Comentários
+    // Comentários
     document.querySelectorAll('.btn-comment-toggle').forEach(btn => {
         btn.addEventListener('click', () => {
             const article = btn.closest('article');
@@ -931,7 +943,7 @@
             const list = article.querySelector('.comments-list');
             const countSpan = article.querySelector('.comment-count');
 
-            if (input.value.trim() !== "") {
+            if (input && input.value.trim() !== "") {
                 const now = new Date();
                 const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
                 
@@ -950,7 +962,7 @@
         });
     });
 
-    // Modo Câmera
+    // Câmera HUD
     const btnCamera = document.getElementById('btn-camera');
     const cameraModal = document.getElementById('camera-modal');
     const btnCloseCamera = document.getElementById('btn-close-camera');
@@ -959,38 +971,46 @@
     const btnCapture = document.getElementById('btn-capture');
     let mediaStream = null;
 
-    btnCamera.addEventListener('click', async () => {
-        try {
-            mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
-            video.srcObject = mediaStream;
-            video.style.display = 'block';
-            canvas.style.display = 'none';
-            cameraModal.classList.add('active');
-        } catch (err) {
-            showToast("ERRO AO ACESSAR A CÂMERA DO DISPOSITIVO!");
-        }
-    });
+    if (btnCamera) {
+        btnCamera.addEventListener('click', async () => {
+            try {
+                mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = mediaStream;
+                video.style.display = 'block';
+                canvas.style.display = 'none';
+                cameraModal.classList.add('active');
+            } catch (err) {
+                showToast("ERRO AO ACESSAR A CÂMERA DO DISPOSITIVO!");
+            }
+        });
+    }
 
-    btnCloseCamera.addEventListener('click', () => {
-        if (mediaStream) {
-            mediaStream.getTracks().forEach(track => track.stop());
-        }
-        cameraModal.classList.remove('active');
-    });
+    if (btnCloseCamera) {
+        btnCloseCamera.addEventListener('click', () => {
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+            }
+            cameraModal.classList.remove('active');
+        });
+    }
 
-    btnCapture.addEventListener('click', () => {
-        if (video.style.display !== 'none') {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            video.style.display = 'none';
-            canvas.style.display = 'block';
-            showToast("CAPTURA DE IMAGEM REALIZADA!");
-        }
-    });
+    if (btnCapture) {
+        btnCapture.addEventListener('click', () => {
+            if (video && video.style.display !== 'none') {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                video.style.display = 'none';
+                canvas.style.display = 'block';
+                showToast("CAPTURA DE IMAGEM REALIZADA!");
+            }
+        });
+    }
 
-    // --- NOVO SISTEMA AVANÇADO DE IA & WIKIPÉDIA ---
+    // ==========================================
+    // 2. MOTOR AVANÇADO DE IA & WIKIPÉDIA (EXPANDIDO)
+    // ==========================================
     const btnToggleAssistant = document.getElementById('btn-toggle-assistant');
     const assistantWidget = document.getElementById('assistant-widget');
     const btnCloseAssistant = document.getElementById('btn-close-assistant');
@@ -1002,37 +1022,49 @@
 
     let currentMode = 'ia';
 
-    btnToggleAssistant.addEventListener('click', () => {
-        assistantWidget.classList.toggle('active');
-    });
+    if (btnToggleAssistant) {
+        btnToggleAssistant.addEventListener('click', () => {
+            assistantWidget.classList.toggle('active');
+        });
+    }
 
-    btnCloseAssistant.addEventListener('click', () => {
-        assistantWidget.classList.remove('active');
-    });
+    if (btnCloseAssistant) {
+        btnCloseAssistant.addEventListener('click', () => {
+            assistantWidget.classList.remove('active');
+        });
+    }
 
-    tabIa.addEventListener('click', () => {
-        currentMode = 'ia';
-        tabIa.classList.add('active');
-        tabWiki.classList.remove('active');
-        assistantInput.placeholder = "FAÇA QUALQUER PERGUNTA À IA...";
-    });
+    if (tabIa) {
+        tabIa.addEventListener('click', () => {
+            currentMode = 'ia';
+            tabIa.classList.add('active');
+            tabWiki.classList.remove('active');
+            assistantInput.placeholder = "PERGUNTE QUALQUER COISA PARA A IA...";
+        });
+    }
 
-    tabWiki.addEventListener('click', () => {
-        currentMode = 'wiki';
-        tabWiki.classList.add('active');
-        tabIa.classList.remove('active');
-        assistantInput.placeholder = "PESQUISAR NA WIKIPÉDIA...";
-    });
+    if (tabWiki) {
+        tabWiki.addEventListener('click', () => {
+            currentMode = 'wiki';
+            tabWiki.classList.add('active');
+            tabIa.classList.remove('active');
+            assistantInput.placeholder = "PESQUISAR NA WIKIPÉDIA...";
+        });
+    }
 
-    btnAssistantSearch.addEventListener('click', handleSearch);
-    assistantInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleSearch();
-    });
+    if (btnAssistantSearch) {
+        btnAssistantSearch.addEventListener('click', handleSearch);
+    }
 
-    // Limpa a frase digitada para extrair os termos principais
+    if (assistantInput) {
+        assistantInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSearch();
+        });
+    }
+
     function cleanQuery(query) {
         return query.toLowerCase()
-            .replace(/^(oq é|o que é|o que sao|oq sao|quem foi|quem é|definicao de|significado de|como funciona|sobre)\s+/g, '')
+            .replace(/^(oq é|o que é|o que sao|oq sao|quem foi|quem é|definicao de|significado de|como funciona|sobre|me diga|qual é|qual o|quem ganhou|onde fica)\s+/g, '')
             .replace(/[?!=]/g, '')
             .trim();
     }
@@ -1042,27 +1074,27 @@
         if (!rawQuery) return;
 
         const term = cleanQuery(rawQuery);
-        assistantOutput.innerHTML = `> CONECTANDO AO NÚCLEO... PROCESSANDO "${rawQuery.toUpperCase()}"...`;
+        assistantOutput.innerHTML = `> CONECTANDO AO NÚCLEO... PROCESSANDO CONEXÃO NEURAL...`;
 
         if (currentMode === 'wiki') {
             await searchWikipedia(term, rawQuery);
         } else {
-            generateAIResponse(rawQuery, term);
+            // Processamento IA Inteligente
+            setTimeout(() => {
+                processSmartAI(rawQuery, term);
+            }, 400);
         }
     }
 
-    // Consulta de 2 etapas na Wikipédia (Busca por termo + Resumo)
+    // --- BUSCA NA WIKIPÉDIA ---
     async function searchWikipedia(term, originalQuery) {
         try {
-            // Busca os artigos mais relevantes para o termo
             const searchUrl = `https://pt.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(term)}&utf8=&format=json&origin=*`;
             const searchRes = await fetch(searchUrl);
             const searchData = await searchRes.json();
 
             if (searchData.query && searchData.query.search.length > 0) {
                 const bestTitle = searchData.query.search[0].title;
-                
-                // Obtém o resumo do artigo encontrado
                 const summaryUrl = `https://pt.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(bestTitle)}`;
                 const summaryRes = await fetch(summaryUrl);
                 const summaryData = await summaryRes.json();
@@ -1076,42 +1108,87 @@
                     return;
                 }
             }
-            
-            // Fallback caso não encontre na Wikipedia
-            assistantOutput.innerHTML = `> WIKIPÉDIA NÃO ENCONTROU ARTIGO DIRETO. REDIRECIONANDO PARA A IA...<br><br>`;
-            setTimeout(() => generateAIResponse(originalQuery, term), 1000);
-
+            assistantOutput.innerHTML = `> WIKIPÉDIA NÃO ENCONTROU UM ARTIGO DIRETO. ALTERNANDO PARA O MOTOR DA IA...<br><br>`;
+            setTimeout(() => processSmartAI(originalQuery, term), 800);
         } catch (err) {
-            assistantOutput.innerHTML = `> ERRO NA CONEXÃO WIKI. ATIVANDO RESPOSTA DE EMERGÊNCIA DA IA...<br><br>`;
-            setTimeout(() => generateAIResponse(originalQuery, term), 1000);
+            assistantOutput.innerHTML = `> MÓDULO WIKI INDISPONÍVEL. ATIVANDO RESPOSTA DA IA...<br><br>`;
+            setTimeout(() => processSmartAI(originalQuery, term), 800);
         }
     }
 
-    // Motor de Geração de Respostas Inteligentes por IA
-    function generateAIResponse(query, term) {
-        const lower = query.toLowerCase();
+    // --- CÉREBRO EXPANDIDO DA IA (PROCESSAMENTO MULTICONTEXTUAL) ---
+    function processSmartAI(rawQuery, term) {
+        const text = rawQuery.toLowerCase();
         let response = "";
 
-        if (lower.includes('dilema') || lower.includes('ética') || lower.includes('digital')) {
-            response = "Dilemas digitais referem-se a conflitos éticos e morais causados pelo avanço tecnológico rápido. Isso inclui questões sobre privacidade de dados, vigilância em massa, vício em redes sociais, e os limites do uso da Inteligência Artificial na tomada de decisões humanas.";
-        } else if (lower.includes('privacidade') || lower.includes('dados') || lower.includes('segurança')) {
-            response = "Privacidade digital é o direito de controlar quais informações pessoais são coletadas, armazenadas e compartilhadas na rede. Na sociedade hyperconectada, proteger dados exige o uso de criptografia, autenticação em duas etapas e VPNs.";
-        } else if (lower.includes('saúde') || lower.includes('ansiedade') || lower.includes('mente')) {
-            response = "O uso contínuo de telas e redes sociais pode gerar sobrecarga sensorial, ansiedade e fadiga cognitiva. Práticas de minimalismo digital e desaceleração do uso de dispositivos ajudam a manter a saúde mental.";
-        } else if (lower.includes('ia') || lower.includes('inteligência artificial') || lower.includes('robo')) {
-            response = "Inteligência Artificial (IA) é o campo da ciência da computação focado em criar sistemas capazes de realizar tarefas que normalmente exigem inteligência humana, como aprendizado, raciocínio lógico e processamento de linguagem natural.";
-        } else {
-            response = `Análise do sistema sobre "${query}": Trata-se de um tópico relevante na infraestrutura digital e tecnológica. Para explorar definições acadêmicas e dados históricos exatos sobre "${term}", alterne para a aba [WIKIPÉDIA] no topo deste painel.`;
+        // 1. Perguntas de Tempo e Hora do Sistema
+        if (text.includes('hora') || text.includes('horas') || text.includes('que horas') || text.includes('horario')) {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            response = `No seu sistema local agora são exatamente <strong>${h}:${m}:${s}</strong> (Data: ${now.toLocaleDateString('pt-BR')}).`;
+        }
+        else if (text.includes('dia') || text.includes('data') || text.includes('hoje')) {
+            const now = new Date();
+            response = `Hoje é dia <strong>${now.toLocaleDateString('pt-BR')}</strong> no calendário do seu dispositivo.`;
         }
 
+        // 2. Futebol & Esportes
+        else if (text.includes('libertadores')) {
+            response = "A Copa Libertadores da América é a principal competição de clubes da América do Sul. Campeões recentes incluem equipes brasileiras como Fluminense (2023), Flamengo (2022/2019) e Palmeiras (2021/2020). Para ver a tabela atualizada ou o campeão do ano corrente, você pode clicar na aba Wikipédia!";
+        }
+        else if (text.includes('maior clube') || text.includes('maior time') || text.includes('melhor time')) {
+            response = "Em títulos internacionais e história global, o Real Madrid é frequentemente reconhecido como o maior clube do mundo. No Brasil, clubes como São Paulo, Santos, Flamengo, Palmeiras, Grêmio, Internacional e Corinthians possuem imensas conquistas mundiais e nacionais!";
+        }
+
+        // 3. Política e Sociedade
+        else if (text.includes('presidente do brasil') || text.includes('presidente do br')) {
+            response = "O atual presidente da República Federativa do Brasil é Luiz Inácio Lula da Silva (que assumiu o mandato para o período de 2023 a 2026).";
+        }
+
+        // 4. Bate-papo & Conversa Geral
+        else if (text.includes('oi') || text.includes('olá') || text.includes('ola') || text.includes('e ai') || text.includes('eai')) {
+            response = "Olá, conexão estabelecida! Como posso te ajudar hoje? Pode me perguntar sobre tecnologia, curiosidades, fatos do mundo, horas ou pedir para pesquisar na Wikipédia!";
+        }
+        else if (text.includes('tudo bem') || text.includes('como voce ta') || text.includes('como vai')) {
+            response = "Todos os meus sistemas operacionais estão funcionando a 100%! E com você, tudo em ordem na rede?";
+        }
+        else if (text.includes('quem é você') || text.includes('quem e voce') || text.includes('seu nome')) {
+            response = "Eu sou a IA Assistente HUD integrada ao Blog Tech 2077 do Wesllin. Fui programada para responder dúvidas, analisar dados e buscar informações em tempo real!";
+        }
+        else if (text.includes('quem te criou') || text.includes('quem fez voce')) {
+            response = "Fui desenvolvida para integrar a interface Cyberpunk deste projeto Tech criado pelo desenvolvedor Wesllin!";
+        }
+
+        // 5. Módulo do Blog (Dilemas Digitais)
+        else if (text.includes('dilema') || text.includes('ética') || text.includes('digital')) {
+            response = "Dilemas digitais são os desafios éticos gerados pelo avanço da tecnologia: invasão de privacidade, vício em telas, inteligência artificial sem controle e fake news. O objetivo do nosso blog é discutir como viver bem na era digital!";
+        }
+        else if (text.includes('privacidade') || text.includes('dados') || text.includes('segurança')) {
+            response = "A privacidade digital garante que você tenha controle sobre suas informações na internet. Dicas importantes: use senhas fortes, ative verificação em duas etapas e evite clicar em links suspeitos.";
+        }
+        else if (text.includes('saúde mental') || text.includes('ansiedade') || text.includes('celular')) {
+            response = "O uso excessivo de telas pode provocar ansiedade e cansaço visual. Pratique o 'desplugue digital': estabeleça horários sem celular antes de dormir e faça pausas durante o dia.";
+        }
+
+        // 6. Resposta Inteligente Genérica / Pesquisa Direta
+        else {
+            response = `Compreendi a sua dúvida sobre <strong>"${rawQuery}"</strong>!<br><br>
+            Como sou uma IA focada em auxílio rápido, preparei um atalho direto:<br>
+            👉 <a href="https://www.google.com/search?q=${encodeURIComponent(rawQuery)}" target="_blank" style="color:var(--neon-cyan); text-decoration:underline;">[CLIQUE AQUI PARA BUSCAR NO GOOGLE]</a><br><br>
+            <em>Dica: Alternando para a aba [WIKIPÉDIA] no topo deste painel, eu busco o artigo oficial completo para você!</em>`;
+        }
+
+        // Renderização no HUD
         assistantOutput.innerHTML = `
-            <strong style="color:var(--neon-yellow)">[IA RESPOSTA AUTÔNOMA]</strong><br><br>
+            <strong style="color:var(--neon-yellow)">[IA ASSISTANT NEURAL]</strong><br><br>
             ${response}
         `;
     }
 </script>
 
-                
+                         
 >
 
 </body>
