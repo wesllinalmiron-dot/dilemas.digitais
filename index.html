@@ -841,241 +841,278 @@
         <p>© 2077 MEU BLOG TECH // DEVELOPED BY WESLLIN</p>
     </footer>
 
-    <script>
-        // Lógica de Verificação de Idade
-        const ageGate = document.getElementById('age-gate');
-        const btnOver18 = document.getElementById('btn-over-18');
-        const btnUnder18 = document.getElementById('btn-under-18');
-        const ageDeniedMsg = document.getElementById('age-denied-msg');
+    <
+<script>
+    // Lógica de Verificação de Idade
+    const ageGate = document.getElementById('age-gate');
+    const btnOver18 = document.getElementById('btn-over-18');
+    const btnUnder18 = document.getElementById('btn-under-18');
+    const ageDeniedMsg = document.getElementById('age-denied-msg');
 
-        btnOver18.addEventListener('click', () => {
-            ageGate.style.display = 'none';
-            document.body.classList.remove('age-gate-locked');
+    btnOver18.addEventListener('click', () => {
+        ageGate.style.display = 'none';
+        document.body.classList.remove('age-gate-locked');
+    });
+
+    btnUnder18.addEventListener('click', () => {
+        ageDeniedMsg.style.display = 'block';
+    });
+
+    // Relógio e Data em Tempo Real
+    function updateClock() {
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+
+        document.getElementById('live-clock').textContent = `${day}/${month}/${year} -- ${hours}:${minutes}:${seconds}`;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Curtidas
+    document.querySelectorAll(".btn-interacao").forEach(botao => {
+        if (botao.classList.contains('btn-comment-toggle') || botao.classList.contains('btn-share-post')) return;
+        let curtiu = false;
+        botao.addEventListener("click", () => {
+            let contador = botao.querySelector("span");
+            let valor = parseInt(contador.textContent);
+            contador.textContent = curtiu ? valor - 1 : valor + 1;
+            botao.classList.toggle("ativo");
+            curtiu = !curtiu;
         });
+    });
 
-        btnUnder18.addEventListener('click', () => {
-            ageDeniedMsg.style.display = 'block';
-        });
-
-        // Relógio e Data em Tempo Real
-        function updateClock() {
-            const now = new Date();
-            const day = String(now.getDate()).padStart(2, '0');
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const year = now.getFullYear();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-
-            document.getElementById('live-clock').textContent = `${day}/${month}/${year} -- ${hours}:${minutes}:${seconds}`;
+    // Alternar Tema
+    const btnTheme = document.getElementById("btn-theme");
+    btnTheme.addEventListener("click", () => {
+        const currentTheme = document.documentElement.getAttribute("data-theme");
+        if (currentTheme === "light") {
+            document.documentElement.removeAttribute("data-theme");
+            btnTheme.textContent = "MODO ESCURO";
+        } else {
+            document.documentElement.setAttribute("data-theme", "light");
+            btnTheme.textContent = "MODO CLARO";
         }
-        updateClock();
-        setInterval(updateClock, 1000);
+    });
 
-        // Curtidas
-        document.querySelectorAll(".btn-interacao").forEach(botao => {
-            if (botao.classList.contains('btn-comment-toggle') || botao.classList.contains('btn-share-post')) return;
-            let curtiu = false;
-            botao.addEventListener("click", () => {
-                let contador = botao.querySelector("span");
-                let valor = parseInt(contador.textContent);
-                contador.textContent = curtiu ? valor - 1 : valor + 1;
-                botao.classList.toggle("ativo");
-                curtiu = !curtiu;
-            });
+    // Toast de Notificação
+    function showToast(msg) {
+        const toast = document.getElementById('toast-notification');
+        toast.textContent = msg;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+
+    // Modo Compartilhar
+    document.querySelectorAll('.btn-share-post, #btn-share-page').forEach(btn => {
+        btn.addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href);
+            showToast("LINK DO PROJETO COPIADO COM SUCESSO! [SYS.SHARE]");
         });
+    });
 
-        // Alternar Tema
-        const btnTheme = document.getElementById("btn-theme");
-        btnTheme.addEventListener("click", () => {
-            const currentTheme = document.documentElement.getAttribute("data-theme");
-            if (currentTheme === "light") {
-                document.documentElement.removeAttribute("data-theme");
-                btnTheme.textContent = "MODO ESCURO";
-            } else {
-                document.documentElement.setAttribute("data-theme", "light");
-                btnTheme.textContent = "MODO CLARO";
+    // Modo Comentários
+    document.querySelectorAll('.btn-comment-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const article = btn.closest('article');
+            const commentSection = article.querySelector('.comments-section');
+            commentSection.classList.toggle('open');
+        });
+    });
+
+    document.querySelectorAll('.btn-send-comment').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const article = btn.closest('article');
+            const input = article.querySelector('.comment-input');
+            const list = article.querySelector('.comments-list');
+            const countSpan = article.querySelector('.comment-count');
+
+            if (input.value.trim() !== "") {
+                const now = new Date();
+                const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+                
+                const commentItem = document.createElement('div');
+                commentItem.className = 'comment-item';
+                commentItem.innerHTML = `
+                    <div class="comment-header"><span>USER_GUEST</span><span>SYS.LOG ${timeStr}</span></div>
+                    <p class="artigo-texto">${input.value}</p>
+                `;
+                list.appendChild(commentItem);
+                
+                countSpan.textContent = parseInt(countSpan.textContent) + 1;
+                input.value = "";
+                showToast("COMENTÁRIO ENVIADO PARA A REDE!");
             }
         });
+    });
 
-        // Toast de Notificação
-        function showToast(msg) {
-            const toast = document.getElementById('toast-notification');
-            toast.textContent = msg;
-            toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    // Modo Câmera
+    const btnCamera = document.getElementById('btn-camera');
+    const cameraModal = document.getElementById('camera-modal');
+    const btnCloseCamera = document.getElementById('btn-close-camera');
+    const video = document.getElementById('webcam-feed');
+    const canvas = document.getElementById('photo-canvas');
+    const btnCapture = document.getElementById('btn-capture');
+    let mediaStream = null;
+
+    btnCamera.addEventListener('click', async () => {
+        try {
+            mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = mediaStream;
+            video.style.display = 'block';
+            canvas.style.display = 'none';
+            cameraModal.classList.add('active');
+        } catch (err) {
+            showToast("ERRO AO ACESSAR A CÂMERA DO DISPOSITIVO!");
         }
+    });
 
-        // Modo Compartilhar
-        document.querySelectorAll('.btn-share-post, #btn-share-page').forEach(btn => {
-            btn.addEventListener('click', () => {
-                navigator.clipboard.writeText(window.location.href);
-                showToast("LINK DO PROJETO COPIADO COM SUCESSO! [SYS.SHARE]");
-            });
-        });
+    btnCloseCamera.addEventListener('click', () => {
+        if (mediaStream) {
+            mediaStream.getTracks().forEach(track => track.stop());
+        }
+        cameraModal.classList.remove('active');
+    });
 
-        // Modo Comentários
-        document.querySelectorAll('.btn-comment-toggle').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const article = btn.closest('article');
-                const commentSection = article.querySelector('.comments-section');
-                commentSection.classList.toggle('open');
-            });
-        });
+    btnCapture.addEventListener('click', () => {
+        if (video.style.display !== 'none') {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            video.style.display = 'none';
+            canvas.style.display = 'block';
+            showToast("CAPTURA DE IMAGEM REALIZADA!");
+        }
+    });
 
-        document.querySelectorAll('.btn-send-comment').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const article = btn.closest('article');
-                const input = article.querySelector('.comment-input');
-                const list = article.querySelector('.comments-list');
-                const countSpan = article.querySelector('.comment-count');
+    // --- NOVO SISTEMA AVANÇADO DE IA & WIKIPÉDIA ---
+    const btnToggleAssistant = document.getElementById('btn-toggle-assistant');
+    const assistantWidget = document.getElementById('assistant-widget');
+    const btnCloseAssistant = document.getElementById('btn-close-assistant');
+    const tabIa = document.getElementById('tab-ia');
+    const tabWiki = document.getElementById('tab-wiki');
+    const assistantInput = document.getElementById('assistant-input');
+    const btnAssistantSearch = document.getElementById('btn-assistant-search');
+    const assistantOutput = document.getElementById('assistant-output');
 
-                if (input.value.trim() !== "") {
-                    const now = new Date();
-                    const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-                    
-                    const commentItem = document.createElement('div');
-                    commentItem.className = 'comment-item';
-                    commentItem.innerHTML = `
-                        <div class="comment-header"><span>USER_GUEST</span><span>SYS.LOG ${timeStr}</span></div>
-                        <p class="artigo-texto">${input.value}</p>
-                    `;
-                    list.appendChild(commentItem);
-                    
-                    countSpan.textContent = parseInt(countSpan.textContent) + 1;
-                    input.value = "";
-                    showToast("COMENTÁRIO ENVIADO PARA A REDE!");
-                }
-            });
-        });
+    let currentMode = 'ia';
 
-        // Modo Câmera
-        const btnCamera = document.getElementById('btn-camera');
-        const cameraModal = document.getElementById('camera-modal');
-        const btnCloseCamera = document.getElementById('btn-close-camera');
-        const video = document.getElementById('webcam-feed');
-        const canvas = document.getElementById('photo-canvas');
-        const btnCapture = document.getElementById('btn-capture');
-        let mediaStream = null;
+    btnToggleAssistant.addEventListener('click', () => {
+        assistantWidget.classList.toggle('active');
+    });
 
-        btnCamera.addEventListener('click', async () => {
-            try {
-                mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
-                video.srcObject = mediaStream;
-                video.style.display = 'block';
-                canvas.style.display = 'none';
-                cameraModal.classList.add('active');
-            } catch (err) {
-                showToast("ERRO AO ACESSAR A CÂMERA DO DISPOSITIVO!");
-            }
-        });
+    btnCloseAssistant.addEventListener('click', () => {
+        assistantWidget.classList.remove('active');
+    });
 
-        btnCloseCamera.addEventListener('click', () => {
-            if (mediaStream) {
-                mediaStream.getTracks().forEach(track => track.stop());
-            }
-            cameraModal.classList.remove('active');
-        });
+    tabIa.addEventListener('click', () => {
+        currentMode = 'ia';
+        tabIa.classList.add('active');
+        tabWiki.classList.remove('active');
+        assistantInput.placeholder = "FAÇA QUALQUER PERGUNTA À IA...";
+    });
 
-        btnCapture.addEventListener('click', () => {
-            if (video.style.display !== 'none') {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                video.style.display = 'none';
-                canvas.style.display = 'block';
-                showToast("CAPTURA DE IMAGEM REALIZADA!");
-            }
-        });
+    tabWiki.addEventListener('click', () => {
+        currentMode = 'wiki';
+        tabWiki.classList.add('active');
+        tabIa.classList.remove('active');
+        assistantInput.placeholder = "PESQUISAR NA WIKIPÉDIA...";
+    });
 
-        // Lógica do Painel de IA & Wikipédia HUD
-        const btnToggleAssistant = document.getElementById('btn-toggle-assistant');
-        const assistantWidget = document.getElementById('assistant-widget');
-        const btnCloseAssistant = document.getElementById('btn-close-assistant');
-        const tabIa = document.getElementById('tab-ia');
-        const tabWiki = document.getElementById('tab-wiki');
-        const assistantInput = document.getElementById('assistant-input');
-        const btnAssistantSearch = document.getElementById('btn-assistant-search');
-        const assistantOutput = document.getElementById('assistant-output');
+    btnAssistantSearch.addEventListener('click', handleSearch);
+    assistantInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleSearch();
+    });
 
-        let currentMode = 'ia';
+    // Limpa a frase digitada para extrair os termos principais
+    function cleanQuery(query) {
+        return query.toLowerCase()
+            .replace(/^(oq é|o que é|o que sao|oq sao|quem foi|quem é|definicao de|significado de|como funciona|sobre)\s+/g, '')
+            .replace(/[?!=]/g, '')
+            .trim();
+    }
 
-        btnToggleAssistant.addEventListener('click', () => {
-            assistantWidget.classList.toggle('active');
-        });
+    async function handleSearch() {
+        const rawQuery = assistantInput.value.trim();
+        if (!rawQuery) return;
 
-        btnCloseAssistant.addEventListener('click', () => {
-            assistantWidget.classList.remove('active');
-        });
+        const term = cleanQuery(rawQuery);
+        assistantOutput.innerHTML = `> CONECTANDO AO NÚCLEO... PROCESSANDO "${rawQuery.toUpperCase()}"...`;
 
-        tabIa.addEventListener('click', () => {
-            currentMode = 'ia';
-            tabIa.classList.add('active');
-            tabWiki.classList.remove('active');
-            assistantInput.placeholder = "FAÇA UMA PERGUNTA PARA A IA CYBER...";
-        });
+        if (currentMode === 'wiki') {
+            await searchWikipedia(term, rawQuery);
+        } else {
+            generateAIResponse(rawQuery, term);
+        }
+    }
 
-        tabWiki.addEventListener('click', () => {
-            currentMode = 'wiki';
-            tabWiki.classList.add('active');
-            tabIa.classList.remove('active');
-            assistantInput.placeholder = "PESQUISAR NA WIKIPÉDIA...";
-        });
+    // Consulta de 2 etapas na Wikipédia (Busca por termo + Resumo)
+    async function searchWikipedia(term, originalQuery) {
+        try {
+            // Busca os artigos mais relevantes para o termo
+            const searchUrl = `https://pt.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(term)}&utf8=&format=json&origin=*`;
+            const searchRes = await fetch(searchUrl);
+            const searchData = await searchRes.json();
 
-        btnAssistantSearch.addEventListener('click', handleSearch);
-        assistantInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') handleSearch();
-        });
+            if (searchData.query && searchData.query.search.length > 0) {
+                const bestTitle = searchData.query.search[0].title;
+                
+                // Obtém o resumo do artigo encontrado
+                const summaryUrl = `https://pt.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(bestTitle)}`;
+                const summaryRes = await fetch(summaryUrl);
+                const summaryData = await summaryRes.json();
 
-        async function handleSearch() {
-            const query = assistantInput.value.trim();
-            if (!query) return;
-
-            assistantOutput.innerHTML = `> PROCESSANDO DADOS DA REDE...`;
-
-            if (currentMode === 'wiki') {
-                try {
-                    const response = await fetch(`https://pt.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
-                    if (!response.ok) throw new Error();
-                    const data = await response.json();
-                    
-                    if (data.extract) {
-                        assistantOutput.innerHTML = `
-                            <strong style="color:var(--neon-green)">[WIKI: ${data.title}]</strong><br><br>
-                            ${data.extract}<br><br>
-                            <a href="${data.content_urls.desktop.page}" target="_blank" style="color:var(--neon-cyan)">[VER ARTIGO COMPLETO]</a>
-                        `;
-                    } else {
-                        assistantOutput.innerHTML = `> NENHUM RESULTADO ENCONTRADO NA WIKIPÉDIA PARA "${query}".`;
-                    }
-                } catch (err) {
-                    assistantOutput.innerHTML = `> ERRO AO CONECTAR À WIKIPÉDIA. VERIFIQUE O TERMO E TENTE NOVAMENTE.`;
-                }
-            } else {
-                // Simulação de Respostas Inteligentes de IA Cyberpunk
-                setTimeout(() => {
-                    const lower = query.toLowerCase();
-                    let responseText = "Processando informações no núcleo... ";
-
-                    if (lower.includes('privacidade') || lower.includes('dados')) {
-                        responseText = "Na era 2077, dados são a moeda principal. Proteja suas chaves com criptografia e mantenha seus logs limpos.";
-                    } else if (lower.includes('ajuda') || lower.includes('help')) {
-                        responseText = "SISTEMA DE SUPORTE: Utilize a aba WIKIPÉDIA para dados históricos ou consulte os artigos do blog para guias de ética digital.";
-                    } else if (lower.includes('saúde') || lower.includes('ansiedade') || lower.includes('mente')) {
-                        responseText = "Recomendação da IA: Limite o tempo de conexão neural para evitar estresse de rede. O desplugue periódico é vital.";
-                    } else {
-                        responseText = `Análise sobre "${query}": Para obter detalhes enciclopédicos exatos, recomendo alternar para a aba [WIKIPÉDIA] no topo deste painel.`;
-                    }
-
+                if (summaryData.extract) {
                     assistantOutput.innerHTML = `
-                        <strong style="color:var(--neon-yellow)">[IA RESPOSTA]</strong><br><br>
-                        ${responseText}
+                        <strong style="color:var(--neon-green)">[WIKIPÉDIA: ${summaryData.title.toUpperCase()}]</strong><br><br>
+                        ${summaryData.extract}<br><br>
+                        <a href="${summaryData.content_urls.desktop.page}" target="_blank" style="color:var(--neon-cyan); text-decoration: underline;">[ACESSAR ARTIGO COMPLETO]</a>
                     `;
-                }, 600);
+                    return;
+                }
             }
+            
+            // Fallback caso não encontre na Wikipedia
+            assistantOutput.innerHTML = `> WIKIPÉDIA NÃO ENCONTROU ARTIGO DIRETO. REDIRECIONANDO PARA A IA...<br><br>`;
+            setTimeout(() => generateAIResponse(originalQuery, term), 1000);
+
+        } catch (err) {
+            assistantOutput.innerHTML = `> ERRO NA CONEXÃO WIKI. ATIVANDO RESPOSTA DE EMERGÊNCIA DA IA...<br><br>`;
+            setTimeout(() => generateAIResponse(originalQuery, term), 1000);
         }
-    </script>
+    }
+
+    // Motor de Geração de Respostas Inteligentes por IA
+    function generateAIResponse(query, term) {
+        const lower = query.toLowerCase();
+        let response = "";
+
+        if (lower.includes('dilema') || lower.includes('ética') || lower.includes('digital')) {
+            response = "Dilemas digitais referem-se a conflitos éticos e morais causados pelo avanço tecnológico rápido. Isso inclui questões sobre privacidade de dados, vigilância em massa, vício em redes sociais, e os limites do uso da Inteligência Artificial na tomada de decisões humanas.";
+        } else if (lower.includes('privacidade') || lower.includes('dados') || lower.includes('segurança')) {
+            response = "Privacidade digital é o direito de controlar quais informações pessoais são coletadas, armazenadas e compartilhadas na rede. Na sociedade hyperconectada, proteger dados exige o uso de criptografia, autenticação em duas etapas e VPNs.";
+        } else if (lower.includes('saúde') || lower.includes('ansiedade') || lower.includes('mente')) {
+            response = "O uso contínuo de telas e redes sociais pode gerar sobrecarga sensorial, ansiedade e fadiga cognitiva. Práticas de minimalismo digital e desaceleração do uso de dispositivos ajudam a manter a saúde mental.";
+        } else if (lower.includes('ia') || lower.includes('inteligência artificial') || lower.includes('robo')) {
+            response = "Inteligência Artificial (IA) é o campo da ciência da computação focado em criar sistemas capazes de realizar tarefas que normalmente exigem inteligência humana, como aprendizado, raciocínio lógico e processamento de linguagem natural.";
+        } else {
+            response = `Análise do sistema sobre "${query}": Trata-se de um tópico relevante na infraestrutura digital e tecnológica. Para explorar definições acadêmicas e dados históricos exatos sobre "${term}", alterne para a aba [WIKIPÉDIA] no topo deste painel.`;
+        }
+
+        assistantOutput.innerHTML = `
+            <strong style="color:var(--neon-yellow)">[IA RESPOSTA AUTÔNOMA]</strong><br><br>
+            ${response}
+        `;
+    }
+</script>
+
+                
+>
 
 </body>
 
