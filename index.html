@@ -881,7 +881,7 @@
     updateClock();
     setInterval(updateClock, 1000);
 
-    // Curtidas dos Artigos
+    // Curtidas
     document.querySelectorAll(".btn-interacao").forEach(botao => {
         if (botao.classList.contains('btn-comment-toggle') || botao.classList.contains('btn-share-post')) return;
         let curtiu = false;
@@ -909,7 +909,6 @@
         });
     }
 
-    // Toast Notification
     function showToast(msg) {
         const toast = document.getElementById('toast-notification');
         if (toast) {
@@ -1009,7 +1008,7 @@
     }
 
     // ==========================================
-    // 2. MOTOR AVANÇADO DE IA & WIKIPÉDIA (EXPANDIDO)
+    // 2. CONEXÃO COM WIKIPÉDIA E API DE IA REAL
     // ==========================================
     const btnToggleAssistant = document.getElementById('btn-toggle-assistant');
     const assistantWidget = document.getElementById('assistant-widget');
@@ -1019,6 +1018,9 @@
     const assistantInput = document.getElementById('assistant-input');
     const btnAssistantSearch = document.getElementById('btn-assistant-search');
     const assistantOutput = document.getElementById('assistant-output');
+
+    // Chave de API (Substitua pela sua chave para respostas 100% reais de IA)
+    const GEMINI_API_KEY = "SUA_CHAVE_API_AQUI"; 
 
     let currentMode = 'ia';
 
@@ -1074,19 +1076,16 @@
         if (!rawQuery) return;
 
         const term = cleanQuery(rawQuery);
-        assistantOutput.innerHTML = `> CONECTANDO AO NÚCLEO... PROCESSANDO CONEXÃO NEURAL...`;
+        assistantOutput.innerHTML = `> PROCESSANDO CONEXÃO NEURAL...`;
 
         if (currentMode === 'wiki') {
             await searchWikipedia(term, rawQuery);
         } else {
-            // Processamento IA Inteligente
-            setTimeout(() => {
-                processSmartAI(rawQuery, term);
-            }, 400);
+            await fetchAIResponse(rawQuery);
         }
     }
 
-    // --- BUSCA NA WIKIPÉDIA ---
+    // Busca na Wikipédia via API de Pesquisa + Resumo
     async function searchWikipedia(term, originalQuery) {
         try {
             const searchUrl = `https://pt.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(term)}&utf8=&format=json&origin=*`;
@@ -1108,85 +1107,57 @@
                     return;
                 }
             }
-            assistantOutput.innerHTML = `> WIKIPÉDIA NÃO ENCONTROU UM ARTIGO DIRETO. ALTERNANDO PARA O MOTOR DA IA...<br><br>`;
-            setTimeout(() => processSmartAI(originalQuery, term), 800);
+            assistantOutput.innerHTML = `> NENHUM RESULTADO DIRETO ENCONTRADO NA WIKIPÉDIA. CONSULTANDO IA...<br><br>`;
+            await fetchAIResponse(originalQuery);
         } catch (err) {
-            assistantOutput.innerHTML = `> MÓDULO WIKI INDISPONÍVEL. ATIVANDO RESPOSTA DA IA...<br><br>`;
-            setTimeout(() => processSmartAI(originalQuery, term), 800);
+            assistantOutput.innerHTML = `> ERRO NA CONEXÃO WIKI. ATIVANDO MÓDULO IA...<br><br>`;
+            await fetchAIResponse(originalQuery);
         }
     }
 
-    // --- CÉREBRO EXPANDIDO DA IA (PROCESSAMENTO MULTICONTEXTUAL) ---
-    function processSmartAI(rawQuery, term) {
-        const text = rawQuery.toLowerCase();
-        let response = "";
-
-        // 1. Perguntas de Tempo e Hora do Sistema
-        if (text.includes('hora') || text.includes('horas') || text.includes('que horas') || text.includes('horario')) {
+    // Resposta de IA Integrada
+    async function fetchAIResponse(prompt) {
+        // Respostas locais instantâneas para consultas do sistema local
+        const lower = prompt.toLowerCase();
+        if (lower.includes('hora') || lower.includes('horas') || lower.includes('que horas')) {
             const now = new Date();
-            const h = String(now.getHours()).padStart(2, '0');
-            const m = String(now.getMinutes()).padStart(2, '0');
-            const s = String(now.getSeconds()).padStart(2, '0');
-            response = `No seu sistema local agora são exatamente <strong>${h}:${m}:${s}</strong> (Data: ${now.toLocaleDateString('pt-BR')}).`;
-        }
-        else if (text.includes('dia') || text.includes('data') || text.includes('hoje')) {
-            const now = new Date();
-            response = `Hoje é dia <strong>${now.toLocaleDateString('pt-BR')}</strong> no calendário do seu dispositivo.`;
+            assistantOutput.innerHTML = `<strong style="color:var(--neon-yellow)">[IA ASSISTANT]</strong><br><br>Agora são exatamente <strong>${now.toLocaleTimeString('pt-BR')}</strong> (Data: ${now.toLocaleDateString('pt-BR')}).`;
+            return;
         }
 
-        // 2. Futebol & Esportes
-        else if (text.includes('libertadores')) {
-            response = "A Copa Libertadores da América é a principal competição de clubes da América do Sul. Campeões recentes incluem equipes brasileiras como Fluminense (2023), Flamengo (2022/2019) e Palmeiras (2021/2020). Para ver a tabela atualizada ou o campeão do ano corrente, você pode clicar na aba Wikipédia!";
-        }
-        else if (text.includes('maior clube') || text.includes('maior time') || text.includes('melhor time')) {
-            response = "Em títulos internacionais e história global, o Real Madrid é frequentemente reconhecido como o maior clube do mundo. No Brasil, clubes como São Paulo, Santos, Flamengo, Palmeiras, Grêmio, Internacional e Corinthians possuem imensas conquistas mundiais e nacionais!";
+        // Requisição para API de IA Externa
+        if (GEMINI_API_KEY && GEMINI_API_KEY !== "SUA_CHAVE_API_AQUI") {
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
+                const data = await response.json();
+                const reply = data.candidates[0].content.parts[0].text;
+
+                assistantOutput.innerHTML = `
+                    <strong style="color:var(--neon-yellow)">[IA ASSISTANT NEURAL]</strong><br><br>
+                    ${reply.replace(/\n/g, '<br>')}
+                `;
+                return;
+            } catch (err) {
+                console.error(err);
+            }
         }
 
-        // 3. Política e Sociedade
-        else if (text.includes('presidente do brasil') || text.includes('presidente do br')) {
-            response = "O atual presidente da República Federativa do Brasil é Luiz Inácio Lula da Silva (que assumiu o mandato para o período de 2023 a 2026).";
-        }
-
-        // 4. Bate-papo & Conversa Geral
-        else if (text.includes('oi') || text.includes('olá') || text.includes('ola') || text.includes('e ai') || text.includes('eai')) {
-            response = "Olá, conexão estabelecida! Como posso te ajudar hoje? Pode me perguntar sobre tecnologia, curiosidades, fatos do mundo, horas ou pedir para pesquisar na Wikipédia!";
-        }
-        else if (text.includes('tudo bem') || text.includes('como voce ta') || text.includes('como vai')) {
-            response = "Todos os meus sistemas operacionais estão funcionando a 100%! E com você, tudo em ordem na rede?";
-        }
-        else if (text.includes('quem é você') || text.includes('quem e voce') || text.includes('seu nome')) {
-            response = "Eu sou a IA Assistente HUD integrada ao Blog Tech 2077 do Wesllin. Fui programada para responder dúvidas, analisar dados e buscar informações em tempo real!";
-        }
-        else if (text.includes('quem te criou') || text.includes('quem fez voce')) {
-            response = "Fui desenvolvida para integrar a interface Cyberpunk deste projeto Tech criado pelo desenvolvedor Wesllin!";
-        }
-
-        // 5. Módulo do Blog (Dilemas Digitais)
-        else if (text.includes('dilema') || text.includes('ética') || text.includes('digital')) {
-            response = "Dilemas digitais são os desafios éticos gerados pelo avanço da tecnologia: invasão de privacidade, vício em telas, inteligência artificial sem controle e fake news. O objetivo do nosso blog é discutir como viver bem na era digital!";
-        }
-        else if (text.includes('privacidade') || text.includes('dados') || text.includes('segurança')) {
-            response = "A privacidade digital garante que você tenha controle sobre suas informações na internet. Dicas importantes: use senhas fortes, ative verificação em duas etapas e evite clicar em links suspeitos.";
-        }
-        else if (text.includes('saúde mental') || text.includes('ansiedade') || text.includes('celular')) {
-            response = "O uso excessivo de telas pode provocar ansiedade e cansaço visual. Pratique o 'desplugue digital': estabeleça horários sem celular antes de dormir e faça pausas durante o dia.";
-        }
-
-        // 6. Resposta Inteligente Genérica / Pesquisa Direta
-        else {
-            response = `Compreendi a sua dúvida sobre <strong>"${rawQuery}"</strong>!<br><br>
-            Como sou uma IA focada em auxílio rápido, preparei um atalho direto:<br>
-            👉 <a href="https://www.google.com/search?q=${encodeURIComponent(rawQuery)}" target="_blank" style="color:var(--neon-cyan); text-decoration:underline;">[CLIQUE AQUI PARA BUSCAR NO GOOGLE]</a><br><br>
-            <em>Dica: Alternando para a aba [WIKIPÉDIA] no topo deste painel, eu busco o artigo oficial completo para você!</em>`;
-        }
-
-        // Renderização no HUD
+        // Fallback do motor local se a API não estiver configurada
         assistantOutput.innerHTML = `
-            <strong style="color:var(--neon-yellow)">[IA ASSISTANT NEURAL]</strong><br><br>
-            ${response}
+            <strong style="color:var(--neon-yellow)">[IA ASSISTANT AUTÔNOMA]</strong><br><br>
+            Recebi sua pergunta: "<em>${prompt}</em>".<br><br>
+            Para que eu consiga responder a qualquer pergunta do mundo em tempo real sem limites, insira uma chave de API na variável <code>GEMINI_API_KEY</code> no código do seu site!<br><br>
+            Alternativamente, clique na aba <strong>WIKIPÉDIA</strong> acima para pesquisar artigos oficiais instantaneamente.
         `;
     }
 </script>
+
 
                          
 >
